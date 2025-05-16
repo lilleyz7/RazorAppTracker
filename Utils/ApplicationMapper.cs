@@ -1,0 +1,22 @@
+﻿using AppTrackV2.DTO;
+using AppTrackV2.Models;
+
+namespace AppTrackV2.Utils
+{
+    public class ApplicationMapper
+    {
+        public static Application Map(ApplicationDto applicationDto, ApplicationUser user)
+        {
+            return new Application
+            {
+                Company = applicationDto.Company,
+                Title = applicationDto.Title,
+                Notes = applicationDto.Notes,
+                Status = applicationDto.Status,
+                Link = applicationDto.Link,
+                UserId = user.Id,
+                ApplicationUser = user,
+            };
+        }
+    }
+}
