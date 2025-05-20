@@ -18,5 +18,17 @@ namespace AppTrackV2.Utils
                 ApplicationUser = user,
             };
         }
+
+        public static ApplicationDto ReverseMap(Application app)
+        {
+            return new ApplicationDto
+            {
+                Company = app.Company,
+                Title = app.Title,
+                Notes = app.Notes,
+                Status = app.Status,
+                Link = app.Link,
+            };
+        }
     }
 }
