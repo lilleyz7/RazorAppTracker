@@ -19,6 +19,9 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-page="/Applications/Index">Saved Applications</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-page="/Applications/Create">Add Application</a>
+                    </li>
                 </ul>
 
                 <ul class="navbar-nav ms-auto">
@@ -47,7 +50,7 @@
     </nav>
 
 
-    <main role="main">
+    <main role="main" class="container mt-4">
         @RenderBody()
     </main>
 

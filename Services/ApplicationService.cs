@@ -22,6 +22,7 @@ namespace AppTrackV2.Services
             }
 
             Application newApplication = ApplicationMapper.Map(application, user);
+            newApplication.DateAdded = DateTime.UtcNow;
 
             await _context.Applications.AddAsync(newApplication);
             int changesMade = await _context.SaveChangesAsync();
