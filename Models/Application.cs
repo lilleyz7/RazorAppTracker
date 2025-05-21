@@ -15,7 +15,7 @@ namespace AppTrackV2.Models
         public required string Status { get; set; }
 
         public required string Link { get; set; }
-        public DateTime DateAdded { get; set; } = DateTime.Now;
+        public DateTime DateAdded { get; set; } 
 
         public required string UserId { get; set; }
         public required ApplicationUser ApplicationUser { get; set; }
