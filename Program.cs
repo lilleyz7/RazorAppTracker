@@ -23,6 +23,8 @@ else
         options.UseNpgsql(connectionString));
 
 }
+builder.Services.AddHealthChecks();
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddRazorPages();
 
