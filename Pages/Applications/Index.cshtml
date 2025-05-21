@@ -1,0 +1,61 @@
+﻿@page
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model AppTrackV2.Pages.Applications.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>My Applications</h1>
+
+<p>
+    <a asp-page="Create">Add New Job</a>
+</p>
+<table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Application[0].Title)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Application[0].Company)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Application[0].Status)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Application[0].Link)
+            </th>
+            <th scope="col">
+                @Html.DisplayNameFor(model => model.Application[0].DateAdded)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Application) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Company)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Link)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateAdded.Date)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

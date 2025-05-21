@@ -1,5 +1,6 @@
 using AppTrackV2.Data;
 using AppTrackV2.Models;
+using AppTrackV2.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,20 +18,20 @@ if(environment == "Development")
 }
 else
 {
-    throw new InvalidOperationException("We broke");
-}
-//else
-//{
-//    var connectionString = builder.Configuration.GetConnectionString("ProductionDb") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-//    builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//        options.UseSqlServer(connectionString));
+    var connectionString = builder.Configuration.GetConnectionString("ProductionDb") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseNpgsql(connectionString));
 
-//}
+}
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.AddRazorPages();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAuthorization();
+builder.Services.AddScoped<IApplicationService, ApplicationService>();
 
 var app = builder.Build();
 
@@ -53,10 +54,10 @@ app.UseAuthorization();
 
 app.MapStaticAssets();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}")
-    .WithStaticAssets();
+//app.MapControllerRoute(
+//    name: "default",
+//    pattern: "{controller=Home}/{action=Index}/{id?}")
+//    .WithStaticAssets();
 
 app.MapRazorPages()
    .WithStaticAssets();
