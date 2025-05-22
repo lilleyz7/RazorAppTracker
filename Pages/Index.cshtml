@@ -1,5 +1,15 @@
 ﻿@page
 @model AppTrackV2.Pages.IndexModel
 @{
-    <p>Hello</p>
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="text-center bg-white p-5 rounded">
+            <h1 class="mb-3">Welcome to Application Tracker</h1>
+            <p class="mb-4 text-muted">Keep track of your job applications with ease.</p>
+            <div class="d-grid gap-3">
+
+                <button class="btn btn-primary btn-lg"><a class="nav-link" asp-page="/Applications/Index">View Saved Applications</a></button>
+                <button class="btn btn-outline-primary btn-lg"><a class="nav-link" asp-page="/Applications/Create">Add New Application</a></button>
+            </div>
+        </div>
+    </div>
 }
