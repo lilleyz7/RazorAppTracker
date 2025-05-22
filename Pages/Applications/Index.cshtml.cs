@@ -9,9 +9,12 @@ using AppTrackV2.Data;
 using AppTrackV2.Models;
 using AppTrackV2.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppTrackV2.Pages.Applications
 {
+    [Authorize]
+    [ValidateAntiForgeryToken]
     public class IndexModel : PageModel
     {
         private readonly IApplicationService _service;
@@ -30,7 +33,7 @@ namespace AppTrackV2.Pages.Applications
             var userId = _userManager.GetUserId(User);
             if (userId == null)
             {
-                return RedirectToPage("./Login");
+                return RedirectToPage("");
             }
 
             var applicationsResult = await _service.GetApplicationsByUserAsync(userId);

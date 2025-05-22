@@ -13,9 +13,12 @@ using AppTrackV2.Utils;
 using AppTrackV2.Services;
 using Microsoft.AspNetCore.Identity;
 using AppTrackV2.Utils.Types;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppTrackV2.Pages.Applications
 {
+    [Authorize]
+    [ValidateAntiForgeryToken]
     public class EditModel : PageModel
     {
         private readonly IApplicationService _service;

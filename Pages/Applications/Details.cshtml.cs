@@ -7,14 +7,17 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using AppTrackV2.Data;
 using AppTrackV2.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppTrackV2.Pages.Applications
 {
+    [Authorize]
+    [ValidateAntiForgeryToken]
     public class DetailsModel : PageModel
     {
-        private readonly AppTrackV2.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public DetailsModel(AppTrackV2.Data.ApplicationDbContext context)
+        public DetailsModel(ApplicationDbContext context)
         {
             _context = context;
         }
