@@ -18,7 +18,7 @@ if(environment == "Development")
 }
 else
 {
-    var connectionString = builder.Configuration.GetConnectionString("ProductionDb") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+    var connectionString = Environment.GetEnvironmentVariable("ProductionDb") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(connectionString));
 
