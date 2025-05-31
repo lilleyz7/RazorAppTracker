@@ -14,6 +14,7 @@ namespace AppTrackV2.Utils
                 Notes = applicationDto.Notes,
                 Status = applicationDto.Status,
                 Link = applicationDto.Link,
+                DateAdded = DateTime.UtcNow,
                 UserId = user.Id,
                 ApplicationUser = user,
             };

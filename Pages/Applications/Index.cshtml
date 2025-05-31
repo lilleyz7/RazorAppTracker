@@ -3,7 +3,7 @@
 @model AppTrackV2.Pages.Applications.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "My Applications";
 }
 
 <h1>My Applications</h1>
@@ -15,28 +15,39 @@
     <thead>
         <tr>
             <th scope="col">
-                @Html.DisplayNameFor(model => model.Application[0].Title)
+                <a asp-page="./Index"
+                   asp-route-SortField="title"
+                   asp-route-SortOrder="@(Model.SortField == "title" && Model.SortOrder == "asc" ? "desc" : "asc")">
+                    Title
+                </a>
             </th>
             <th scope="col">
-                @Html.DisplayNameFor(model => model.Application[0].Company)
+                @Html.DisplayNameFor(model => model.Applications[0].Company)
             </th>
             <th scope="col">
-                @Html.DisplayNameFor(model => model.Application[0].Status)
+                <a asp-page="./Index"
+                   asp-route-SortField="status"
+                   asp-route-SortOrder="@(Model.SortField == "status" && Model.SortOrder == "asc" ? "desc" : "asc")">
+                    Status
+                </a>
             </th>
             <th scope="col">
-                @Html.DisplayNameFor(model => model.Application[0].Link)
+                @Html.DisplayNameFor(model => model.Applications[0].Link)
             </th>
             <th scope="col">
-                @Html.DisplayNameFor(model => model.Application[0].DateAdded)
+                <a asp-page="./Index"
+                   asp-route-SortField="dateAdded"
+                   asp-route-SortOrder="@(Model.SortField == "dateAdded" && Model.SortOrder == "asc" ? "desc" : "asc")">
+                    Date
+                </a>
             </th>
             <th scope="col">
                 Actions
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Application) {
+@foreach (var item in Model.Applications) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
@@ -51,7 +62,7 @@
                 @Html.DisplayFor(modelItem => item.Link)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DateAdded.Date)
+                @Html.DisplayFor(modelItem => item.DateAdded)
             </td>
             <td>
                 <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |

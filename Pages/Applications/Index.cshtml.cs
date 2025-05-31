@@ -26,14 +26,20 @@ namespace AppTrackV2.Pages.Applications
             _userManager = userManager;
         }
 
-        public IList<Application> Application { get;set; } = default!;
+        public IList<Application> Applications { get;set; } = default!;
+
+        [BindProperty(SupportsGet = true)]
+        public string SortField { get; set; } = "dateAdded";
+
+        [BindProperty(SupportsGet = true)]
+        public string SortOrder { get; set; } = "asc";
 
         public async Task<IActionResult> OnGetAsync()
         {
             var userId = _userManager.GetUserId(User);
             if (userId == null)
             {
-                return RedirectToPage("");
+                return RedirectToPage("./Login");
             }
 
             var applicationsResult = await _service.GetApplicationsByUserAsync(userId);
@@ -45,11 +51,34 @@ namespace AppTrackV2.Pages.Applications
 
             if(applicationsResult.Data == null)
             {
-                Application = new List<Application>();
+                Applications = new List<Application>();
                 return Page();
             }
 
-            Application = applicationsResult.Data.ToList();
+            var rawApplications = applicationsResult.Data;
+
+            switch (SortField)
+            {
+                case "title":
+                    rawApplications = SortOrder == "desc"
+                        ? rawApplications.OrderByDescending(p => p.Title)
+                        : rawApplications.OrderBy(p => p.Title);
+                    break;
+
+                case "status":
+                    rawApplications = SortOrder == "desc"
+                        ? rawApplications.OrderByDescending(p => p.Status)
+                        : rawApplications.OrderBy(p => p.Status);
+                    break;
+                case "dateAdded":
+                    rawApplications = SortOrder == "desc"
+                        ? rawApplications.OrderByDescending(p => p.DateAdded)
+                        : rawApplications.OrderBy(p => p.DateAdded);
+                    break;
+
+            }
+
+            Applications = rawApplications.ToList();
             return Page();
         }
     }

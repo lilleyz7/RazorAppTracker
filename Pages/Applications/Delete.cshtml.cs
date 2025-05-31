@@ -9,9 +9,12 @@ using AppTrackV2.Data;
 using AppTrackV2.Models;
 using AppTrackV2.Services;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AppTrackV2.Pages.Applications
 {
+    [Authorize]
+    [ValidateAntiForgeryToken]
     public class DeleteModel : PageModel
     {
         private readonly IApplicationService _service;
@@ -41,10 +44,10 @@ namespace AppTrackV2.Pages.Applications
             {
                 Application = applicationResult.Data!;
 
-                return Page();
+                return NotFound();
             }
 
-            return NotFound();
+            return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(Guid id)
