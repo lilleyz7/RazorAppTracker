@@ -1,6 +1,7 @@
 using AppTrackV2.Data;
 using AppTrackV2.Models;
 using AppTrackV2.Services;
+using DotNetEnv;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
@@ -8,9 +9,10 @@ using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Env.Load();
+
 // Add services to the container.
 var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
-Console.WriteLine(environment);
 
 if(environment == "Development")
 {
@@ -24,18 +26,28 @@ else
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseNpgsql(connectionString));
 
-    builder.Services.AddRateLimiter(options =>
-    {
-        options.AddFixedWindowLimiter("fixed", opt =>
-        {
-            opt.PermitLimit = 5;
-            opt.Window = TimeSpan.FromSeconds(20);
-            opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-            opt.QueueLimit = 2;
-        });
-    });
-
 }
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddFixedWindowLimiter("fixed", opt =>
+    {
+        opt.PermitLimit = 5;
+        opt.Window = TimeSpan.FromSeconds(20);
+        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        opt.QueueLimit = 2;
+    });
+});
+
+var redisConnectionString = Environment.GetEnvironmentVariable("RedisConnection") ?? throw new InvalidOperationException("Redis connection not set");
+Console.WriteLine(redisConnectionString);
+
+builder.Services.AddStackExchangeRedisCache(options => {
+    var connection = redisConnectionString;
+    options.Configuration = connection;
+});
+
+
 builder.Services.AddHealthChecks();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();

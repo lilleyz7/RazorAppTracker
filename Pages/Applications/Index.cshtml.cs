@@ -10,6 +10,7 @@ using AppTrackV2.Models;
 using AppTrackV2.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using AppTrackV2.DTO;
 
 namespace AppTrackV2.Pages.Applications
 {

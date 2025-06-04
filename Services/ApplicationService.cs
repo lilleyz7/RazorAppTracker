@@ -4,14 +4,19 @@ using AppTrackV2.Models;
 using AppTrackV2.Utils;
 using AppTrackV2.Utils.Types;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Distributed;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace AppTrackV2.Services
 {
     public class ApplicationService : IApplicationService
     {
         private readonly ApplicationDbContext _context;
-        public ApplicationService(ApplicationDbContext context) {
+        private readonly IDistributedCache _cache;
+        public ApplicationService(ApplicationDbContext context, IDistributedCache cache) {
             _context = context;
+            _cache = cache;
         }
         public async Task<ServerResponse<Application?>> AddApplicationAsync(ApplicationDto application, string userId)
         {
@@ -31,6 +36,7 @@ namespace AppTrackV2.Services
                 return new ServerResponse<Application?>(null, "Unable to add application");
             }
 
+            await ClearCache(userId);
             return new ServerResponse<Application?>(newApplication, null);
         }
 
@@ -79,13 +85,54 @@ namespace AppTrackV2.Services
 
         public async Task<ServerResponse<IEnumerable<Application>?>> GetApplicationsByUserAsync(string userId)
         {
+            IEnumerable<Application>? cachedApplications = await GetCachedApplications(userId);
+            if (cachedApplications != null)
+            {
+                return new ServerResponse<IEnumerable<Application>?>(cachedApplications, null);
+            }
+
             var user = await _context.Users.Include(u => u.applications).FirstAsync(u => u.Id == userId);
             if (user == null)
             {
                 return new ServerResponse<IEnumerable<Application>?>(null, "invalid user");
             }
 
+            string cacheKey = $"user:{userId}:applications";
+
+            var options = new DistributedCacheEntryOptions
+            {
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10)
+            };
+
+            string serializedApplications = JsonSerializer.Serialize(user.applications);
+            await _cache.SetStringAsync(cacheKey, serializedApplications, options);
+
             return new ServerResponse<IEnumerable<Application>?>(user.applications, null);
+        }
+
+        private async Task<IEnumerable<Application>?> GetCachedApplications(string userId)
+        {
+            string? cachedApplicationsString = await _cache.GetStringAsync($"user:{userId}:applications");
+            if (string.IsNullOrEmpty(cachedApplicationsString))
+            {
+                return null;
+            }
+
+            try
+            {
+                IEnumerable<Application>? cachedApplications = JsonSerializer.Deserialize<IEnumerable<Application>>(cachedApplicationsString);
+                return cachedApplications;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+        }
+
+        private async Task ClearCache(string userId)
+        {
+            await _cache.RemoveAsync($"user:{userId}:applications");
         }
 
         public async Task<ServerResponse<Application?>> UpdateApplicationAsync(ApplicationDto applicationUpdatedInfo, string userId, Guid appId)

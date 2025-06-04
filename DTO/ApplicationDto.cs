@@ -11,5 +11,6 @@
         public required string Notes { get; set; }
 
         public required string Link { get; set; }
+        public DateTime DateAdded { get; set; }
     }
 }
