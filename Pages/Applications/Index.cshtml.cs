@@ -35,6 +35,11 @@ namespace AppTrackV2.Pages.Applications
         [BindProperty(SupportsGet = true)]
         public string SortOrder { get; set; } = "asc";
 
+        public int AppliedCount { get; set; } =  0;
+        public int RejectedCount { get; set; } = 0;
+        public int InterviewingCount { get; set; } = 0;
+
+
         public async Task<IActionResult> OnGetAsync()
         {
             var userId = _userManager.GetUserId(User);
@@ -78,6 +83,10 @@ namespace AppTrackV2.Pages.Applications
                     break;
 
             }
+
+            AppliedCount = rawApplications.Where(a => a.Status == "applied").Count();
+            InterviewingCount = rawApplications.Where(a => a.Status == "interviewed").Count();
+            RejectedCount = rawApplications.Where(a => a.Status == "rejected").Count();
 
             Applications = rawApplications.ToList();
             return Page();

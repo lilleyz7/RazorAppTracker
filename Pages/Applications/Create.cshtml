@@ -27,8 +27,12 @@
                 <span asp-validation-for="ApplicationToAdd.Notes" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ApplicationToAdd.Status" class="control-label">Status</label>
-                <input asp-for="ApplicationToAdd.Status" class="form-control" />
+                <select asp-for="ApplicationToAdd.Status" class="form-control">
+                    <option value="">Select Status</option>
+                    <option value="applied">Applied</option>
+                    <option value="interviewed">Interviewed</option>
+                    <option value="rejected">Rejected</option>
+                </select>
                 <span asp-validation-for="ApplicationToAdd.Status" class="text-danger"></span>
             </div>
             <div class="form-group">
